@@ -21,22 +21,27 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+
+    // mongodb connect
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
+    // mongodb collection
     const menuCollection = client.db("bistroDB").collection("menu");
     const reviewsCollection = client.db("bistroDB").collection("reviews");
 
+    // get menu data from mongodb menu collection
     app.get('/menu', async(req, res) => {
       const result = await menuCollection.find().toArray();
       res.send(result);
-    })
+    });
     
+    // get reviews data from mongodb reviews collection
     app.get('/reviews', async(req, res) => {
       const result = await reviewsCollection.find().toArray();
       res.send(result);
-    })
+    });
 
   } finally {}
 }

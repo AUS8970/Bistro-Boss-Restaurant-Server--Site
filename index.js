@@ -253,7 +253,7 @@ async function run() {
       res.send({paymentResult, deleteResult})
     });
 
-    // stats or analytics
+    // admin stats or analytics
     app.get('/admin-stats', verifyToken, verifyAdmin, async(req, res) => {
       const users = await userCollection.estimatedDocumentCount();
       const menuItems = await menuCollection.estimatedDocumentCount();
@@ -280,7 +280,8 @@ async function run() {
       })
     });
 
-    app.get('/order-stats', async(req, res) => {
+    // order stats or analytics
+    app.get('/order-stats', verifyToken, verifyAdmin, async(req, res) => {
       const result = await paymentCollection.aggregate([
         {
           $unwind: '$menuItemIds'
@@ -318,7 +319,7 @@ async function run() {
       ]).toArray();
 
       res.send(result);
-    })
+    });
 
   } finally {}
 }
